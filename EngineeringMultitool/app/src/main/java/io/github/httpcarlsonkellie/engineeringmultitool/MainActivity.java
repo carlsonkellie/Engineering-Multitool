@@ -1,5 +1,6 @@
 package io.github.httpcarlsonkellie.engineeringmultitool;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -83,18 +84,16 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
+            Intent intent = new Intent(this, MainContent.class);
+            startActivity(intent);
         } else if (id == R.id.nav_calipers) {
-
+            Intent intent = new Intent(this, Calipers.class);
         } else if (id == R.id.nav_ym) {
-
+            Intent intent = new Intent(this, YoungFirst.class);
         } else if (id == R.id.nav_material_properties) {
-
+            Intent intent = new Intent(this, WolframMaterials.class);
         } else if (id == R.id.nav_math) {
-
-        //} else if (id == R.id.nav_share) {
-
-        //} else if (id == R.id.nav_send) {
-
+            Intent intent = new Intent(this, WolframMath.class);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
