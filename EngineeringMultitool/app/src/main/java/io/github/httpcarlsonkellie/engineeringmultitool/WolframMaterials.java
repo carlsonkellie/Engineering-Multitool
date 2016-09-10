@@ -12,12 +12,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.support.v7.app.ActionBarActivity;
+
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Jaimie on 9/10/2016.
  */
 public class WolframMaterials extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener  {
+        implements NavigationView.OnNavigationItemSelectedListener, OnClickListener {
+
+    protected static final int REQUEST_OK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +42,6 @@ public class WolframMaterials extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -44,6 +51,8 @@ public class WolframMaterials extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        findViewById(R.id.voice).setOnClickListener(this);
 
     }
 
@@ -113,11 +122,32 @@ public class WolframMaterials extends AppCompatActivity
         return true;
     }
 
-    public void searchMaterials(View view){
+    public void searchMaterials(View view) {
         Intent intent = new Intent(this, MaterialsAnswer.class);
         EditText query = (EditText) findViewById(R.id.editText4);
         intent.putExtra("query", query.getText().toString());
         startActivity(intent);
     }
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+        try {
+            startActivityForResult(i, REQUEST_OK);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error initializing speech to text engine.", Toast.LENGTH_LONG).show();
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_OK && resultCode == RESULT_OK) {
+            ArrayList<String> thingsYouSaid = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            Intent materialsAnswerIntent = new Intent(this, MaterialsAnswer.class);
+            materialsAnswerIntent.putExtra("query", thingsYouSaid.get(0));
+            startActivity(materialsAnswerIntent);
+        }
+    }
 }
