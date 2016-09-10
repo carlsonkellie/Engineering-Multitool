@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -11,31 +11,35 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="io.github.httpcarlsonkellie.engineeringmultitool.Calipers"
-        tools:showIn="@layout/app_bar_calipers">
+        tools:showIn="@layout/app_bar_calipers"
+    android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="500dp"
+    android:layout_height="400dp"
     android:id="@+id/calipers">
 
-    <ImageButton
+        <ImageButton
         android:layout_width="300dp"
-        android:layout_height="75dp"
+        android:layout_height="25dp"
         android:id="@+id/calipertop"
         android:layout_gravity="center_horizontal"
         android:background="#929292" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal" />
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageView2"
+            android:layout_gravity="center_horizontal" />
 
-    <ImageButton
+        <ImageButton
         android:layout_width="300dp"
-        android:layout_height="75dp"
+        android:layout_height="25dp"
         android:id="@+id/caliperbottom"
         android:layout_gravity="center_horizontal"
         android:background="#929292" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -47,19 +51,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="1.4595"
             android:id="@+id/measurement"
             android:layout_margin="10dp" />
 
         <Spinner
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/units"
             android:layout_weight="1"
             android:spinnerMode="dropdown"
             android:prompt = "@string/units"/>
+
     </LinearLayout>
 
 </LinearLayout>
-
-    </RelativeLayout>

@@ -10,12 +10,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jaimie on 9/10/2016.
  */
 public class Calipers extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    double top, bottom, diff;
+  //  TextView diffView = (TextView) findViewById(R.id.measurement);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +37,8 @@ public class Calipers extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final TextView diffView = (TextView) findViewById(R.id.measurement);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +58,63 @@ public class Calipers extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        final ImageView topcaliper = (ImageView) findViewById(R.id.calipertop);
+        final ImageView bottomcaliper = (ImageView) findViewById(R.id.caliperbottom);
+        final ImageView space = (ImageView) findViewById(R.id.imageView2);
+
+        top = topcaliper.getY();
+        bottom = bottomcaliper.getY();
+        diff = bottom - top;
+
+         topcaliper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
+                    float y = event.getY();
+                    System.out.println("top " + top);
+                    System.out.println("y" + y);
+                    System.out.println("touched top");
+                    top += y;
+                    diff = bottom - top;
+                    diffView.setText("" + diff);
+                    topcaliper.setY((float) top);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        bottomcaliper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
+                    float y = event.getY();
+                    System.out.println("bottom " + bottom);
+                    System.out.println("y" + y);
+                        System.out.println("touched bottom");
+                        bottom += y;
+                        diff = bottom - top;
+                        diffView.setText("" + diff);
+                        bottomcaliper.setY((float) bottom);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+//        Spinner spinner = (Spinner) findViewById(R.id.units);
+//        List<String> categories = new ArrayList<String>();
+//        categories.add("in. ");
+//        categories.add("mm. ");
+//
+//        // Creating adapter for spinner
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+//
+//        // Drop down layout style - list view with radio button
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        // attaching data adapter to spinner
+//        spinner.setAdapter(dataAdapter);
     }
 
     @Override

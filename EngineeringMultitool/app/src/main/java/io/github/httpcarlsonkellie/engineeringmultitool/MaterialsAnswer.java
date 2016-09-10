@@ -1,6 +1,8 @@
 package io.github.httpcarlsonkellie.engineeringmultitool;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,16 +13,94 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 /**
  * Created by Jaimie on 9/10/2016.
  */
 public class MaterialsAnswer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
+    String appid = "H2GX8L-A7P3U9LTTQ";
+    String query;
+
+    public String toURL(String query) throws MalformedURLException {
+        return "http://api.wolframalpha.com/v2/query?" + "input=" + query + "&appid=" + appid;
+    }
+
+    class MyTask extends AsyncTask<String, Void, Void> {
+        Exception exception;
+
+        protected Void doInBackground(String... urls) {
+            try {
+                URL url = new URL(toURL(query));
+                try {
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String htmlSource = "";
+                    String line = "";
+                    FileOutputStream outputStream;
+                    String filename = "content_materials_answer.xml";
+                    while ((line = bufferedReader.readLine()) != null){
+                        htmlSource += line;
+                    }
+                    System.out.println(htmlSource);
+                    try {
+                        outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                        outputStream.write(htmlSource.getBytes());
+                        outputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+//                    try {
+//                        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(htmlSource)));
+//                        xmlDocument.getDocumentElement().normalize();
+//                    } catch (ParserConfigurationException e){
+//                        //caught whatever
+//                    } catch (SAXException s){
+//                        //caught whatever
+//                    }
+
+                } catch (IOException io){
+                    System.out.println("io error");
+                }
+
+            } catch (MalformedURLException m){
+                System.out.println("error, bad query");
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void feed) {
+            // TODO: check this.exception
+            // TODO: do something with the feed
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.math_answer);
+        setContentView(R.layout.materials_answer);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -35,8 +115,8 @@ public class MaterialsAnswer extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         Intent intent = getIntent();
-        String query = intent.getStringExtra("query");
-
+        query = intent.getStringExtra("query");
+        new MyTask().execute();
 
     }
 
