@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_home_black_24dp_2x"
             android:title="Home" />
         <item
             android:id="@+id/nav_calipers"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Calipers" />
         <item
             android:id="@+id/nav_ym"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_gavel_black_24dp_2x"
             android:title="Young's Modulus" />
         <item
             android:id="@+id/nav_material_properties"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_terrain_black_24dp_2x"
             android:title="Material Properties" />
         <item
             android:id="@+id/nav_math"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_all_inclusive_black_24dp_2x"
             android:title="Math"/>
     </group>
 
