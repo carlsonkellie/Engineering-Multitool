@@ -17,7 +17,6 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +87,16 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_calipers) {
             Intent intent = new Intent(this, Calipers.class);
+            startActivity(intent);
         } else if (id == R.id.nav_ym) {
             Intent intent = new Intent(this, YoungFirst.class);
+            startActivity(intent);
         } else if (id == R.id.nav_material_properties) {
             Intent intent = new Intent(this, WolframMaterials.class);
+            startActivity(intent);
         } else if (id == R.id.nav_math) {
             Intent intent = new Intent(this, WolframMath.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
