@@ -5,4 +5,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name ="units">Units</string>
+    <string-array name="inormm">
+        <item>in. </item>
+        <item>mm. </item>
+    </string-array>
+
 </resources>
