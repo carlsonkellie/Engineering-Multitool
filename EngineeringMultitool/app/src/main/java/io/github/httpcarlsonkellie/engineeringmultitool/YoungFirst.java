@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 /**
@@ -112,17 +113,20 @@ public class YoungFirst extends AppCompatActivity
         return true;
     }
 
-    public void clickButton(){
+    public void clickButton(View view){
         Intent intent = new Intent(this, YoungSecond.class);
         EditText mass = (EditText) findViewById(R.id.editText);
         EditText area = (EditText) findViewById(R.id.editText3);
         EditText originalLength = (EditText) findViewById(R.id.editText2);
-        double m = Double.parseDouble(mass.getText().toString());
+        EditText weightMass = (EditText) findViewById(R.id.editText6);
+        double m1 = Double.parseDouble(mass.getText().toString());
         double a = Double.parseDouble(area.getText().toString());
         double l = Double.parseDouble(originalLength.getText().toString());
-        intent.putExtra("mass", m);
-        intent.putExtra("area", a);
-        intent.putExtra("length", l);
+        double m2 = Double.parseDouble(weightMass.getText().toString());
+        intent.putExtra("m1", m1);
+        intent.putExtra("a", a);
+        intent.putExtra("l", l);
+        intent.putExtra("m2", m2);
         startActivity(intent);
 
     }
