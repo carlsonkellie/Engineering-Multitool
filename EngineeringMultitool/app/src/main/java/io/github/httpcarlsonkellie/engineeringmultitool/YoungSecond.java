@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +45,8 @@ public class YoungSecond extends AppCompatActivity
     double g = 9.8;
     double az = 0;
     double F = 0;
-
+    List<Double> stressArrayList;
+    List<Double> strainArrayList;
 //    class MyTimerTask extends TimerTask{
 //        @Override
 //        public void run(){
@@ -103,8 +106,8 @@ public class YoungSecond extends AppCompatActivity
             String epsilon = " " + (double) Math.round(strain*1000.0)/1000.0;
             stressText.setText(sigma);
             strainText.setText(epsilon);
-
-
+            stressArrayList.add((double) Math.round(stress*1000.0)/1000.0);
+            strainArrayList.add((double) Math.round(strain*1000.0)/1000.0);
         }
 
 //        double ag = event.values[2]; //accelerration with gravity
@@ -151,6 +154,8 @@ public class YoungSecond extends AppCompatActivity
         l = intent.getDoubleExtra("l", 0);
         dl = 0;
         timestamp = 0;
+        stressArrayList = new ArrayList<Double>();
+        strainArrayList = new ArrayList<Double>();
 
 //        Timer timer = new Timer();
 //        MyTimerTask timerTask = new MyTimerTask();
@@ -229,6 +234,24 @@ public class YoungSecond extends AppCompatActivity
 
     public void stop(View view){
         Intent intent = new Intent(this, YoungThird.class);
+        Double[] stresses1 = new Double[stressArrayList.size()];
+        Double[] strains1 = new Double[strainArrayList.size()];
+        System.out.println(stressArrayList.size());
+        System.out.println(strainArrayList.size());
+        stressArrayList.toArray(stresses1);
+        strainArrayList.toArray(strains1);
+        double[] stresses = new double[stresses1.length];
+        double[] strains = new double[strains1.length];
+
+        for (int i = 0; i < stresses.length; i++){
+            stresses[i] = stresses1[i].doubleValue();
+            strains[i] = strains1[i].doubleValue();
+        }
+
+        System.out.println(stresses.length);
+        System.out.println(strains.length);
+        intent.putExtra("stresses", stresses);
+        intent.putExtra("strains", strains);
         startActivity(intent);
     }
 }

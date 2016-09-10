@@ -11,6 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by Jaimie on 9/10/2016.
  */
@@ -43,7 +51,29 @@ public class YoungThird extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Intent intent = getIntent();
+        double[] stresses = intent.getDoubleArrayExtra("stresses");
+        double[] strains = intent.getDoubleArrayExtra("strains");
+
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
+        List<SortableDataPoint> toSort = new ArrayList<SortableDataPoint>();
+        for (int i = 0; i < stresses.length; i++) {
+            SortableDataPoint<Double> dataPoint = new SortableDataPoint((Double) strains[i], (Double) stresses[i]);
+            toSort.add(dataPoint);
+        }
+        Collections.sort(toSort);
+
+        for (int i = 0; i < toSort.size(); i++){
+            SortableDataPoint<Double> pt = toSort.get(i);
+            DataPoint dataPoint = new DataPoint(pt.getX().doubleValue(), pt.getY().doubleValue());
+            series.appendData(dataPoint, true, 10000000, false);
+        }
+        graph.addSeries(series);
+
     }
+
 
     @Override
     public void onBackPressed() {
