@@ -40,7 +40,8 @@ tools:showIn="@layout/app_bar_wolfram_materials">
             android:layout_height="wrap_content"
             android:text="Search"
             android:id="@+id/searchButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:onClick="searchMaterials"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 /**
  * Created by Jaimie on 9/10/2016.
@@ -109,6 +111,13 @@ public class WolframMaterials extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void searchMaterials(View view){
+        Intent intent = new Intent(this, MaterialsAnswer.class);
+        EditText query = (EditText) findViewById(R.id.editText4);
+        intent.putExtra("query", query.getText().toString());
+        startActivity(intent);
     }
 
 }
