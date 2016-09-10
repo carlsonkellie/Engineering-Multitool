@@ -43,7 +43,6 @@
             android:id="@+id/units"
             android:layout_weight="1"
             android:spinnerMode="dropdown"
-            android:entries = "@string-array/inormm"
             android:prompt = "@string/units"/>
     </LinearLayout>
 
