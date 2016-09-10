@@ -28,4 +28,6 @@ dependencies {
     compile files('libs/WolframAlpha-1.1.jar')
     compile files('libs/commons-codec-1.3.jar')
     compile files('libs/httpclient-core-4.0.1.jar')
+    compile files('libs/httpcore-4.0.1.jar')
+    compile files('libs/org-apache-commons-logging.jar')
 }
