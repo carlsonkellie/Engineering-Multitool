@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 
 /**
  * Created by Jaimie on 9/10/2016.
@@ -111,14 +109,6 @@ public class WolframMath extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void clickButton(View view){
-        Intent intent = new Intent(this, MathAnswer.class);
-        EditText calc = (EditText) findViewById(R.id.editText5);
-        String c = (calc.getText().toString());
-        intent.putExtra("c", c);
-        startActivity(intent);
     }
 
 }
