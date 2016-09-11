@@ -71,7 +71,7 @@ public class Calipers extends AppCompatActivity
 
         top = topcaliper.getY();
         bottom = bottomcaliper.getY();
-        diff = Math.abs(bottom - top)/myYDpi;
+        diff = Math.abs(bottom - top)/441;
 
          topcaliper.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -82,7 +82,7 @@ public class Calipers extends AppCompatActivity
                     System.out.println("y" + y);
                     System.out.println("touched top");
                     top += y;
-                    diff = Math.abs(bottom - top)/myYDpi;
+                    diff = Math.abs(bottom - top)/441;
                     diffView.setText("" + diff);
                     topcaliper.setY((float) top);
                     return true;
@@ -100,7 +100,7 @@ public class Calipers extends AppCompatActivity
                     System.out.println("y" + y);
                         System.out.println("touched bottom");
                         bottom += y;
-                        diff = Math.abs(bottom - top)/myYDpi;
+                        diff = Math.abs(bottom - top)/441;
                         diffView.setText("" + diff);
                         bottomcaliper.setY((float) bottom);
                         return true;
