@@ -9,9 +9,9 @@ public class SortableDataPoint<T extends Comparable<T>> implements Comparable<So
     public T x;
     public T y;
 
-    public SortableDataPoint (T x, T y){
-        x = x;
-        y = y;
+    public SortableDataPoint (T strain, T stress){
+        x = strain;
+        y = stress;
     }
 
     public T getX(){
@@ -23,8 +23,7 @@ public class SortableDataPoint<T extends Comparable<T>> implements Comparable<So
     }
 
     public int compareTo(SortableDataPoint<T> that){
-        if (that == null) return 0;
-        return this.y.compareTo(that.y);
+        return this.x.compareTo(that.x);
     }
 
 }

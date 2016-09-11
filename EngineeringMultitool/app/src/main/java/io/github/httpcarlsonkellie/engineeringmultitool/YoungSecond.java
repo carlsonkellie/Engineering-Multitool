@@ -45,6 +45,7 @@ public class YoungSecond extends AppCompatActivity
     double g = 9.8f;
     double az = 0;
     double F = 0;
+    double stress, strain;
     List<Double> stressArrayList;
     List<Double> strainArrayList;
 //    class MyTimerTask extends TimerTask{
@@ -90,7 +91,7 @@ public class YoungSecond extends AppCompatActivity
                 System.out.println("DT" + dT);
                 timestamp = event.timestamp;
                 double ddl = 0.5*az*dT*dT*1000.0;
-                if (dl + ddl < l) {
+                if (Math.abs(dl + ddl) < l) {
                     dl += ddl; //this integration purportedly has bad accuracy; Kalman filter?
                 }
                 System.out.println("DL" + dl);
@@ -98,8 +99,11 @@ public class YoungSecond extends AppCompatActivity
 
             }
 
-            double stress = F/a;
-            double strain = (double) (l - dl)/l;
+            stress = F/a;
+            if (l - dl > 0 && l - dl < l){
+                strain = (double) (l - dl)/l;
+
+            }
             System.out.println("STRESS" + stress);
             System.out.println("STRAIN" + strain);
 

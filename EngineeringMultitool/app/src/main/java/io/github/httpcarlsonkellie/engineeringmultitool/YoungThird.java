@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -60,18 +61,47 @@ public class YoungThird extends AppCompatActivity
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
         List<SortableDataPoint> toSort = new ArrayList<SortableDataPoint>();
         for (int i = 0; i < stresses.length; i++) {
-            SortableDataPoint<Double> dataPoint = new SortableDataPoint((Double) strains[i], (Double) stresses[i]);
+            SortableDataPoint<Double> dataPoint = new SortableDataPoint<Double>((Double) strains[i], (Double) stresses[i]);
+            System.out.println("strains 2i "  + strains[i]);
+            System.out.println("stresses 2i " + stresses[i]);
             toSort.add(dataPoint);
         }
         Collections.sort(toSort);
 
+        double maxStrength = 0.0;
+        double xySum = 0.0;
+        double xSum = 0.0;
+        double ySum = 0.0;
+        double x2Sum = 0.0;
+        int n = 0;
+
         for (int i = 0; i < toSort.size(); i++){
             SortableDataPoint<Double> pt = toSort.get(i);
             DataPoint dataPoint = new DataPoint(pt.getX().doubleValue(), pt.getY().doubleValue());
+            System.out.println("pt double" + pt.getX().doubleValue());
+            System.out.println("pt doubley" + pt.getY().doubleValue());
+            if (pt.getY().doubleValue() >  maxStrength){
+                maxStrength = pt.getY().doubleValue();
+            }
+            xySum += pt.getX().doubleValue() * pt.getY().doubleValue();
+            xSum += pt.getX().doubleValue();
+            ySum += pt.getY().doubleValue();
+            x2Sum += pt.getX().doubleValue()*pt.getX().doubleValue();
+            n++;
             series.appendData(dataPoint, true, 10000000, false);
         }
 
         graph.addSeries(series);
+
+        TextView us2 = (TextView) findViewById(R.id.us2);
+        us2.setText("" + maxStrength);
+
+        double youngsModulus = n*xySum - xSum*ySum;
+        youngsModulus /= (n*x2Sum - (xSum*xSum));
+        youngsModulus = Math.round(youngsModulus*10000.0)/10000.0;
+        TextView ym2 = (TextView) findViewById(R.id.ym2);
+        ym2.setText("" + youngsModulus);
+
     }
 
 
