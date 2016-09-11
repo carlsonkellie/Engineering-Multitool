@@ -39,6 +39,15 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="SPEAK NOW"
+            android:id="@+id/voiceMath"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onClick"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Go!"
             android:id="@+id/go"
             android:layout_gravity="center_horizontal" />

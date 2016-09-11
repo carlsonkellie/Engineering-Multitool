@@ -2,6 +2,7 @@ package io.github.httpcarlsonkellie.engineeringmultitool;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,12 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jaimie on 9/10/2016.
  */
 public class WolframMath extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener  {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    protected static final int REQUEST_OK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,8 @@ public class WolframMath extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        findViewById(R.id.voiceMath).setOnClickListener(this);
 
     }
 
@@ -104,12 +112,35 @@ public class WolframMath extends AppCompatActivity
         return true;
     }
 
-    public void clickButton(View view){
+    public void searchMath(View view) {
         Intent intent = new Intent(this, MathAnswer.class);
-        EditText calc = (EditText) findViewById(R.id.editText5);
-        String c = (calc.getText().toString());
-        intent.putExtra("c", c);
+        EditText query = (EditText) findViewById(R.id.editText5);
+        intent.putExtra("query", query.getText().toString());
         startActivity(intent);
     }
 
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+        try {
+            startActivityForResult(i, REQUEST_OK);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error initializing speech to text engine.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_OK && resultCode == RESULT_OK) {
+            ArrayList<String> thingsYouSaid = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            Intent materialsAnswerIntent = new Intent(this, MathAnswer.class);
+            materialsAnswerIntent.putExtra("query", thingsYouSaid.get(0));
+            startActivity(materialsAnswerIntent);
+        }
+    }
+
 }
+]

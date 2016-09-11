@@ -1,6 +1,8 @@
 package io.github.httpcarlsonkellie.engineeringmultitool;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,17 +12,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.view.View;
 import android.widget.EditText;
 
-
-import com.wolfram.alpha.WAEngine;
-import com.wolfram.alpha.WAException;
-import com.wolfram.alpha.WAPlainText;
-import com.wolfram.alpha.WAPod;
-import com.wolfram.alpha.WAQuery;
-import com.wolfram.alpha.WAQueryResult;
-import com.wolfram.alpha.WASubpod;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by Jaimie on 9/10/2016.
@@ -28,8 +30,69 @@ import com.wolfram.alpha.WASubpod;
 public class MathAnswer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
-    private static String appid = "H2GX8L-A7P3U9LTTQ";
+    String appid = "H2GX8L-A7P3U9LTTQ";
+    String query;
 
+    public String toURL(String query) throws MalformedURLException {
+        return "http://api.wolframalpha.com/v2/query?" + "input=" + query + "&appid=" + appid;
+    }
+
+    class MyTask extends AsyncTask<String, Void, Void> {
+        Exception exception;
+
+        protected Void doInBackground(String... urls) {
+            try {
+                URL url = new URL(toURL(query));
+                try {
+                    URLConnection connection = url.openConnection();
+                    connection.connect();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String htmlSource = "";
+                    String line = "";
+                    FileOutputStream outputStream;
+                    String filename = "content_math_answer.xml";
+                    while ((line = bufferedReader.readLine()) != null){
+                        htmlSource += line;
+                    }
+                    System.out.println(htmlSource);
+
+                    ImageView image = (ImageView) findViewById(R.id.imageMath);
+                    //image.setImageResource(R.drawable.xxx);
+                    //INPUT IMAGE FROM XML FILE HERE!
+
+
+                    /*try {
+                        outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                        outputStream.write(htmlSource.getBytes());
+                        outputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }*/
+//                    try {
+//                        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(htmlSource)));
+//                        xmlDocument.getDocumentElement().normalize();
+//                    } catch (ParserConfigurationException e){
+//                        //caught whatever
+//                    } catch (SAXException s){
+//                        //caught whatever
+//                    }
+
+                } catch (IOException io){
+                    System.out.println("io error");
+                }
+
+            } catch (MalformedURLException m){
+                System.out.println("error, bad query");
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void feed) {
+            // TODO: check this.exception
+            // TODO: do something with the feed
+        }
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,52 +111,8 @@ public class MathAnswer extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         Intent intent = getIntent();
-
-        WAEngine engine = new WAEngine();
-        engine.setAppID(appid);
-        engine.addFormat("plaintext");
-
-        // Create the query.
-        WAQuery query = engine.createQuery();
-        String input = intent.getStringExtra("c");
-
-        // Set properties of the query.
-        query.setInput(input);
-
-
-        try {
-
-            WAQueryResult queryResult = engine.performQuery(query);
-
-            if (queryResult.isError()) {
-                System.out.println("Query error");
-                System.out.println("  error code: " + queryResult.getErrorCode());
-                System.out.println("  error message: " + queryResult.getErrorMessage());
-            } else if (!queryResult.isSuccess()) {
-                System.out.println("Query was not understood; no results available.");
-            } else {
-                // Got a result.
-                System.out.println("Successful query. Pods follow:\n");
-                for (WAPod pod : queryResult.getPods()) {
-                    if (!pod.isError()) {
-                        System.out.println(pod.getTitle());
-                        System.out.println("------------");
-                        for (WASubpod subpod : pod.getSubpods()) {
-                            for (Object element : subpod.getContents()) {
-                                if (element instanceof WAPlainText) {
-                                    System.out.println(((WAPlainText) element).getText());
-                                    System.out.println("");
-                                }
-                            }
-                        }
-                        System.out.println("");
-                    }
-                }
-            }
-        } catch (WAException e) {
-            e.printStackTrace();
-        }
-
+        query = intent.getStringExtra("query");
+        new MyTask().execute();
 
     }
 
