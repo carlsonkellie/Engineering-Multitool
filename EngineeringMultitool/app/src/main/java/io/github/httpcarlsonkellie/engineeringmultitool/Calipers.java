@@ -65,7 +65,7 @@ public class Calipers extends AppCompatActivity
 
         DisplayMetrics metrics = new DisplayMetrics();
         //getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        final float myYDpi = metrics.ydpi;
+        final double myYDpi = (double)metrics.ydpi;
         //float  mMetersToPixelsX = mXDpi / 0.0254f; // 1 inch == 0.0254 meter
         //float  mMetersToPixelsY = mYDpi / 0.0254f;
 
