@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -62,9 +63,15 @@ public class Calipers extends AppCompatActivity
         final ImageView bottomcaliper = (ImageView) findViewById(R.id.caliperbottom);
         final ImageView space = (ImageView) findViewById(R.id.imageView2);
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        //getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        final float myYDpi = metrics.ydpi;
+        //float  mMetersToPixelsX = mXDpi / 0.0254f; // 1 inch == 0.0254 meter
+        //float  mMetersToPixelsY = mYDpi / 0.0254f;
+
         top = topcaliper.getY();
         bottom = bottomcaliper.getY();
-        diff = bottom - top;
+        diff = Math.abs(bottom - top)/myYDpi;
 
          topcaliper.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -75,7 +82,7 @@ public class Calipers extends AppCompatActivity
                     System.out.println("y" + y);
                     System.out.println("touched top");
                     top += y;
-                    diff = bottom - top;
+                    diff = Math.abs(bottom - top)/myYDpi;
                     diffView.setText("" + diff);
                     topcaliper.setY((float) top);
                     return true;
@@ -93,7 +100,7 @@ public class Calipers extends AppCompatActivity
                     System.out.println("y" + y);
                         System.out.println("touched bottom");
                         bottom += y;
-                        diff = bottom - top;
+                        diff = Math.abs(bottom - top)/myYDpi;
                         diffView.setText("" + diff);
                         bottomcaliper.setY((float) bottom);
                         return true;
