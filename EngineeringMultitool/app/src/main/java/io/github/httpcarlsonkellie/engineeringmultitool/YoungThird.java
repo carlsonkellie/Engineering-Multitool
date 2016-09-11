@@ -70,8 +70,8 @@ public class YoungThird extends AppCompatActivity
             DataPoint dataPoint = new DataPoint(pt.getX().doubleValue(), pt.getY().doubleValue());
             series.appendData(dataPoint, true, 10000000, false);
         }
-        graph.addSeries(series);
 
+        graph.addSeries(series);
     }
 
 

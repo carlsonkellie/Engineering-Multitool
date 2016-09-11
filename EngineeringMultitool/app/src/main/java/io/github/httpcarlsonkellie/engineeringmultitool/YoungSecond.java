@@ -42,7 +42,7 @@ public class YoungSecond extends AppCompatActivity
     private float accelCurrent;
     private float accelLast;
     private double accelz = 0;
-    double g = 9.8;
+    double g = 9.8f;
     double az = 0;
     double F = 0;
     List<Double> stressArrayList;
@@ -62,52 +62,56 @@ public class YoungSecond extends AppCompatActivity
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, gravity, 10);
-        sensorManager.registerListener(this, accel, 10);
+        sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public void onSensorChanged(SensorEvent event){
         System.out.println("sensor changed!!");
 
         if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
-            System.out.println("we have gravity sensor");
-            g = event.values[2];
+           // System.out.println("we have gravity sensor");
+         //   g = event.values[2];
         } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             System.out.println("we have acceleration sensor");
             double correction = 0.44;
             System.out.println(event.values[2] - g);
-            az = event.values[2] - g - correction;
+            System.out.println("g" + g);
+            az = event.values[2] - g;
             double dT = 0;
             if (timestamp != 0){
                 dT = (event.timestamp - timestamp)/1000000000.0;
             }
-            if (Math.abs(az) > 0.1) {
+            if (Math.abs(az) > 0.5) {
                 System.out.println("ACCELERATION" + az);
                 F = (double) (m1+m2)*(az + g) / 1000.0;
                 System.out.println("FORCE"  + F);
 
                 System.out.println("DT" + dT);
                 timestamp = event.timestamp;
-                dl += 0.5*az*dT*dT*1000.0; //this integration purportedly has bad accuracy; Kalman filter?
+                double ddl = 0.5*az*dT*dT*1000.0;
+                if (dl + ddl < l) {
+                    dl += ddl; //this integration purportedly has bad accuracy; Kalman filter?
+                }
                 System.out.println("DL" + dl);
                 System.out.println("L" + l);
 
             }
 
             double stress = F/a;
-            double strain = (double) (l + dl)/l;
+            double strain = (double) (l - dl)/l;
             System.out.println("STRESS" + stress);
             System.out.println("STRAIN" + strain);
 
             TextView stressText = (TextView) findViewById(R.id.stress2);
             TextView strainText = (TextView) findViewById(R.id.strain2);
 
-            String sigma = " " + (double) Math.round(stress*1000.0)/1000.0;
-            String epsilon = " " + (double) Math.round(strain*1000.0)/1000.0;
+            String sigma = " " + (double) Math.round(stress*100000.0)/100000.0;
+            String epsilon = " " + (double) Math.round(strain*100000.0)/100000.0;
             stressText.setText(sigma);
             strainText.setText(epsilon);
-            stressArrayList.add((double) Math.round(stress*1000.0)/1000.0);
-            strainArrayList.add((double) Math.round(strain*1000.0)/1000.0);
+            stressArrayList.add((double) Math.round(stress*100000.0)/100000.0);
+            strainArrayList.add((double) Math.round(strain*100000.0)/100000.0);
         }
 
 //        double ag = event.values[2]; //accelerration with gravity
