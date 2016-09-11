@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:text="Go!"
             android:id="@+id/go"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:onClick="searchMath"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -57,6 +57,11 @@ public class MathAnswer extends AppCompatActivity
                     System.out.println(htmlSource);
 
                     ImageView image = (ImageView) findViewById(R.id.imageMath);
+
+                    String h[] = htmlSource.split("<img src=");
+                    for (int i = 0; i < h.length; i++){
+                        System.out.println("hi = " + h[i]);
+                    }
                     //image.setImageResource(R.drawable.xxx);
                     //INPUT IMAGE FROM XML FILE HERE!
 
@@ -112,6 +117,7 @@ public class MathAnswer extends AppCompatActivity
 
         Intent intent = getIntent();
         query = intent.getStringExtra("query");
+        System.out.println("query=" + query);
         new MyTask().execute();
 
     }

@@ -143,4 +143,3 @@ public class WolframMath extends AppCompatActivity
     }
 
 }
-]
