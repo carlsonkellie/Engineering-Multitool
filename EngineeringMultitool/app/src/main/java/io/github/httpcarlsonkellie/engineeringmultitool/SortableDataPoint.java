@@ -23,6 +23,7 @@ public class SortableDataPoint<T extends Comparable<T>> implements Comparable<So
     }
 
     public int compareTo(SortableDataPoint<T> that){
+        if (that == null) return 0;
         return this.y.compareTo(that.y);
     }
 
