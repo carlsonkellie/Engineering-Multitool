@@ -2,6 +2,8 @@ package io.github.httpcarlsonkellie.engineeringmultitool;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,15 +12,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,11 +35,13 @@ import java.net.URLConnection;
 public class MathAnswer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
-    String appid = "H2GX8L-A7P3U9LTTQ";
-    String query;
+    String appid = "H2GX8L-URJGJUK2R4";
+    String query, imageURL;
 
     public String toURL(String query) throws MalformedURLException {
-        return "http://api.wolframalpha.com/v2/query?" + "input=" + query + "&appid=" + appid;
+        String query2 = query.replaceAll(" ", "%20");
+        System.out.println("query =" + query);
+        return "http://api.wolframalpha.com/v2/query?" + "input=" + query2 + "&appid=" + appid;
     }
 
     class MyTask extends AsyncTask<String, Void, Void> {
@@ -62,9 +69,15 @@ public class MathAnswer extends AppCompatActivity
                     for (int i = 0; i < h.length; i++){
                         System.out.println("hi = " + h[i]);
                     }
+                    String[] imageURLs = h[1].split("\'");
+//                    for (int i = 0; i < imageURLs.length; i++){
+//                        System.out.println("i" + imageURLs[i]);
+//                    }
+                    imageURL = imageURLs[1].replace("amp;", "");
+
+
                     //image.setImageResource(R.drawable.xxx);
                     //INPUT IMAGE FROM XML FILE HERE!
-
 
                     /*try {
                         outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
@@ -95,9 +108,46 @@ public class MathAnswer extends AppCompatActivity
         protected void onPostExecute(Void feed) {
             // TODO: check this.exception
             // TODO: do something with the feed
+
+            //now I have the URL and can modify the graphics of the page
+
+            new DownloadImageTask((ImageView) findViewById(R.id.imageMath))
+                    .execute(imageURL);
+
         }
 
     }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = imageURL;
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +168,10 @@ public class MathAnswer extends AppCompatActivity
         Intent intent = getIntent();
         query = intent.getStringExtra("query");
         System.out.println("query=" + query);
+
+        TextView mathQuestion = (TextView) findViewById(R.id.queryView);
+        mathQuestion.setText(query);
+
         new MyTask().execute();
 
     }
