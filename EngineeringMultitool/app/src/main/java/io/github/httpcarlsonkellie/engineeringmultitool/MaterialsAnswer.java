@@ -46,6 +46,7 @@ public class MaterialsAnswer extends AppCompatActivity
     String appid = "H2GX8L-A7P3U9LTTQ";
     String query, answer;
 
+
     public String toURL(String query) throws MalformedURLException {
         String query2 = query.replaceAll(" ", "%20");
         System.out.println("query =" + query);
