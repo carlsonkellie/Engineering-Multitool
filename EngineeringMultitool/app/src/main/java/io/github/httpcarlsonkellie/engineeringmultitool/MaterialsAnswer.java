@@ -12,11 +12,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -40,10 +44,12 @@ public class MaterialsAnswer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
     String appid = "H2GX8L-A7P3U9LTTQ";
-    String query;
+    String query, answer;
 
     public String toURL(String query) throws MalformedURLException {
-        return "http://api.wolframalpha.com/v2/query?" + "input=" + query + "&appid=" + appid;
+        String query2 = query.replaceAll(" ", "%20");
+        System.out.println("query =" + query);
+        return "http://api.wolframalpha.com/v2/query?" + "input=" + query2 + "&appid=" + appid;
     }
 
     class MyTask extends AsyncTask<String, Void, Void> {
@@ -63,14 +69,34 @@ public class MaterialsAnswer extends AppCompatActivity
                     while ((line = bufferedReader.readLine()) != null){
                         htmlSource += line;
                     }
-                    System.out.println(htmlSource);
-                    try {
-                        outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-                        outputStream.write(htmlSource.getBytes());
-                        outputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    String h[] = htmlSource.split("<pod | </pod>");
+                    answer = "";
+                    for (int i = 0; i < h.length; i++){
+                        System.out.println("hi = " + h[i]);
+                        String[] words = h[i].split(" ");
+                        if (words.length >= 1) {
+                            System.out.println("words 0 " + words[0]);
+                            if (words[0].equals("title='Result'") || words[0].equals(" title='Result'") || words[0].equals("title='Result' ") ) {
+                                String[] answers = h[i].split("<plaintext>|</plaintext>");
+                                System.out.println("answers0" + answers[0]);
+                                System.out.println("answers1" + answers[1]);
+                                answer = answers[1];
+                                return null;
+                            }
+                        }
                     }
+
+//                    try {
+//                        XMLReader reader = XMLReaderFactory.createXMLReader();
+//                        reader.parse(htmlSource);
+//                        String s = (String) reader.getProperty("Result");
+//                        System.out.println("S" + s);
+//                    } catch (SAXException s){
+//                        System.out.println("exception");
+//                        //lol i dont care
+                    //lol i do care it ended up throwing this exception
+//                    }
+
 //                    try {
 //                        Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(htmlSource)));
 //                        xmlDocument.getDocumentElement().normalize();
@@ -91,8 +117,8 @@ public class MaterialsAnswer extends AppCompatActivity
         }
 
         protected void onPostExecute(Void feed) {
-            // TODO: check this.exception
-            // TODO: do something with the feed
+            TextView ans = (TextView) findViewById(R.id.materialsanswer);
+            ans.setText(answer);
         }
 
     }
@@ -116,7 +142,12 @@ public class MaterialsAnswer extends AppCompatActivity
 
         Intent intent = getIntent();
         query = intent.getStringExtra("query");
-        new MyTask().execute();
+        TextView question = (TextView) findViewById(R.id.materialstitle);
+        question.setText(query);
+
+        MyTask task = new MyTask();
+        task.execute();
+
 
     }
 
