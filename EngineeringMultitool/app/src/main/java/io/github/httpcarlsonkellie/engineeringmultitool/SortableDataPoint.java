@@ -9,7 +9,7 @@ public class SortableDataPoint<T extends Comparable<T>> implements Comparable<So
     public T x;
     public T y;
 
-    public SortableDataPoint (T x, T x){
+    public SortableDataPoint (T x, T y){
         x = x;
         y = y;
     }
